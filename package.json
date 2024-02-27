@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/charleysmithschofield/tinyapp-/issues"
   },
-  "homepage": "https://github.com/charleysmithschofield/tinyapp-#readme"
+  "homepage": "https://github.com/charleysmithschofield/tinyapp-#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
