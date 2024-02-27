@@ -16,6 +16,11 @@ app.get("/", (req, res) => {
   // Send "Hello!" as the response when a GET request is made to the root endpoint
   res.send("Hello!");
 });
+// Route handler for the "/urls.json" endpoint
+app.get("/urls.json", (req, res) => {
+  // Send the urlDatabase object as a JSON response when a GET request is made to the "/urls.json" endpoint
+  res.json(urlDatabase);
+});
 
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
