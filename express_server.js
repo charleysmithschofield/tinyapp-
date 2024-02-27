@@ -22,6 +22,12 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+// Route handler for the "/hello" endpoint
+app.get("/hello", (req, res) => {
+  // Send the HTML resoibse with a greeting to the world
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicatign that the server is running and listening on the specified port
