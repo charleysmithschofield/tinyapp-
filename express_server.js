@@ -5,6 +5,8 @@ const app = express();
 // Define the port number for the server to listen on (8080 default port)
 const PORT = 8080;
 
+app.set("view enging", "ejs");
+
 // A database storing shortened URLs as key-value pairs
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
