@@ -5,7 +5,7 @@ const app = express();
 // Define the port number for the server to listen on (8080 default port)
 const PORT = 8080;
 
-app.set("view enging", "ejs");
+app.set("view engine", "ejs");
 
 // A database storing shortened URLs as key-value pairs
 const urlDatabase = {
@@ -28,6 +28,12 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   // Send the HTML resoibse with a greeting to the world
   res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
+// Route handler for the "/urls" endpoint
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
 // Start the server and listen for incoming requests on the specified port
