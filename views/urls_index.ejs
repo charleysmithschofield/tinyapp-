@@ -17,6 +17,9 @@
     <title>TinyApp</title>
   </head>
   <body>
+      <!-- Include header partial-->
+      <%- include('partials/_header')%>
+
     <main style="margin: 1em;">
       <h3>My URLs</h3>
       <table class="table">
@@ -38,7 +41,7 @@
           <% } %>
         </tbody>
       </table>
-      <!-- Link fo rshortenin a new URL (currently inactive)-->
+      <!-- Link for shortenin a new URL (currently inactive)-->
       <a href='#'>Shorten a New URL</a>
     </main>
     <!-- Bootstrap JS -->
