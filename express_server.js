@@ -36,6 +36,14 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// Route handler for the "urls/:id"
+app.get("/urls/:id", (req, res) => {
+  // Fetch the long URL from the urlDatabase by providing the corresponding id
+  const longURL = urlDatabase[req.params.id];
+  const templateVars = { id: req.params.id, longURL: longURL };
+  res.render("urls_show", templateVars);
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicatign that the server is running and listening on the specified port
