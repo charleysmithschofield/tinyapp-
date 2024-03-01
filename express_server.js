@@ -19,6 +19,21 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Function to generate a string of 6 random alphanumeric characters
+function generateRandomString() {
+  // Variable called randomString to store the random alphanumeric string
+  let randomString = '';
+  // Variable called characters containing the alphabet in lower and uppercase, as well as, the numbers from 0 to 9
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV0123456789';
+  // For loop to iterate the characters
+  for (let i = 0; i < 6; i++) {
+    // add random characters to the randomString. Use .charAt, Math.floor and Math.random to generate random characters
+    randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return randomString;
+};
+
+
 // Route handler for the root endpoint
 app.get("/", (req, res) => {
   // Send "Hello!" as the response when a GET request is made to the root endpoint
