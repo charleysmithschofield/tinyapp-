@@ -5,7 +5,12 @@ const app = express();
 // Define the port number for the server to listen on (8080 default port)
 const PORT = 8080;
 
+// Middle-ware to parse the URL-encoded form data
+app.use(express.urlencoded({ extended: true }));
+
+// Sets view engine to ejs
 app.set("view engine", "ejs");
+
 
 // A database storing shortened URLs as key-value pairs
 const urlDatabase = {
