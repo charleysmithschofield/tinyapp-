@@ -36,6 +36,11 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// Route handler for URLs new page
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 // Route handler for the "urls/:id"
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
@@ -43,6 +48,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { id: req.params.id, longURL: longURL };
   res.render("urls_show", templateVars);
 });
+
 
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
