@@ -76,8 +76,16 @@ app.get("/urls/:id", (req, res) => {
 
 // Route handler for the "/urls" endpoint to handle POST requests
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  // Retrieve longURL from the request body
+  const longUrl = req.body.longURL;
+  // Generare shortURL
+  const shortUrl = generateRandomString();
+
+  // Add shortURL and longURL to urlDatabase
+  urlDatabase[shortUrl] = longUrl;
+  
+  // Redirect to /urls/:id route
+  res.redirect(`/urls/${shortUrl}`);
 });
 
 
