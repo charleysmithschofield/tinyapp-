@@ -85,15 +85,8 @@ app.post("/urls", (req, res) => {
   // Add shortURL and longURL to urlDatabase
   urlDatabase[shortURL] = longURL;
   
-  // Respond with a JSON object containing the generated shortURL
-  res.json({ shortURL: shortURL });
-});
-
-app.get("/u/:id", (req, res) => {
-  // const longURL = ...
-  const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL];
-  res.redirect(longURL);
+  // Redirect to the new URL's page
+  res.redirect(`/urls/${shortURL}`);
 });
 
 // Start the server and listen for incoming requests on the specified port
