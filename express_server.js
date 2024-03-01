@@ -77,17 +77,24 @@ app.get("/urls/:id", (req, res) => {
 // Route handler for the "/urls" endpoint to handle POST requests
 app.post("/urls", (req, res) => {
   // Retrieve longURL from the request body
-  const longUrl = req.body.longURL;
-  // Generare shortURL
-  const shortUrl = generateRandomString();
+  const longURL = req.body.longURL;
+
+  // Generate shortURL
+  const shortURL = generateRandomString();
 
   // Add shortURL and longURL to urlDatabase
-  urlDatabase[shortUrl] = longUrl;
+  urlDatabase[shortURL] = longURL;
   
-  // Redirect to /urls/:id route
-  res.redirect(`/urls/${shortUrl}`);
+  // Respond with a JSON object containing the generated shortURL
+  res.json({ shortURL: shortURL });
 });
 
+app.get("/u/:id", (req, res) => {
+  // const longURL = ...
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
 
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
