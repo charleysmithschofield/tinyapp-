@@ -35,10 +35,11 @@
       <table class="table">
         <thead>
           <tr>
-            <!-- Table headers for Short URL ID, Long URL, and Actions-->
+            <!-- Table headers for Short URL ID, Long URL, Actions and Edit-->
             <th scope="col">Short URL ID</th>
             <th scope="col">Long URL</th>
             <th scope="col">Actions</th>
+            <th scope="col">Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -53,6 +54,10 @@
               <td>
                 <form method="POST" action="/urls/<%= id %>/delete">
                 <button type="submit" class="btn btn-custom">Delete</button>
+              </td>
+              <!-- Edit Link for each UR-->
+              <td>
+                <a href="/urls/<%= id %>">Edit</a>
               </td>
             </tr>
           <% } %>

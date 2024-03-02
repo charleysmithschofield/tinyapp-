@@ -22,9 +22,17 @@
         <p class="card-text">
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
-      </div>
-      <div class="card-footer text-muted"></div>
+       <!-- Form for updating the long URL -->
+       <form method="POST" action="/urls/<%= id %>">
+        <div class="form-group">
+          <label for="updatedLongURL">Updated Long URL:</label>
+          <input type="text" class="form-control" id="updatedLongURL" name="updatedLongURL" placeholder="Enter updated long URL" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update URL</button>
+      </form>
     </div>
+    <div class="card-footer text-muted"></div>
+  </div>
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
