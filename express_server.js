@@ -98,6 +98,8 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[urlId];
     // Redirect back to the urls index page ("/urls")
     res.redirect("/urls");
+  } else {
+    res.status(404).send("URL not found");
   }
 });
 
