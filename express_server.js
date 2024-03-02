@@ -89,6 +89,18 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
+// POST route to delete a URL
+app.post("/urls/:id/delete", (req, res) => {
+  const urlId = req.params.id;
+  // Check if the URL exists in the urlDatabase
+  if (urlDatabase[urlId]) {
+    // Delete the URL from the urlDatabase
+    delete urlDatabase[urlId];
+    // Redirect back to the urls index page ("/urls")
+    res.redirect("/urls");
+  }
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicating that the server is running and listening on the specified port

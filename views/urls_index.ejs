@@ -15,6 +15,16 @@
       crossorigin="anonymous"
     />
     <title>TinyApp</title>
+     <!-- Custom CSS for button styling -->
+  <style>
+    .btn-custom {
+      background-color: #ffffff; /* White background */
+      color: #ff0000; /* Red text color */
+      border: 1px solid #ff0000; /* Red border */
+    }
+  </style>
+</head>
+<body>
   </head>
   <body>
       <!-- Include header partial-->
@@ -25,8 +35,10 @@
       <table class="table">
         <thead>
           <tr>
+            <!-- Table headers for Short URL ID, Long URL, and Actions-->
             <th scope="col">Short URL ID</th>
             <th scope="col">Long URL</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -37,6 +49,11 @@
               <td><%= id %></td>
               <!-- Displaying the original URL-->
               <td><%= urls[id] %></td>
+              <!-- Adding form for deleting the URL-->
+              <td>
+                <form method="POST" action="/urls/9sm5xK/delete"></form>
+                <button type="submit" class="btn btn-custom">Delete</button>
+              </td>
             </tr>
           <% } %>
         </tbody>
