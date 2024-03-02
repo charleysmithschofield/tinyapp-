@@ -51,7 +51,7 @@
               <td><%= urls[id] %></td>
               <!-- Adding form for deleting the URL-->
               <td>
-                <form method="POST" action="/urls/9sm5xK/delete"></form>
+                <form method="POST" action="/urls/<%= id %>/delete">
                 <button type="submit" class="btn btn-custom">Delete</button>
               </td>
             </tr>
