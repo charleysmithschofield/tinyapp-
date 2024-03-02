@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- Defined the document type and verstion of HTML -->
+<html lang="en"> <!-- Specifies the language of the document -->
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8" /> <!-- Character encoding for the document -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    /> <!-- Responsive viewport settings for mobile devices -->
 
     <!-- Bootstrap CSS -->
     <link
@@ -13,8 +13,10 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
-    />
-    <title>TinyApp</title>
+    /> <!-- Linking to Bootstrap CSS file -->
+
+    <title>TinyApp</title> <!-- Document title -->
+
      <!-- Custom CSS for button styling -->
      <style>
       .btn-custom {
@@ -62,6 +64,7 @@
               <!-- Adding form for deleting the URL-->
               <td>
                 <form method="POST" action="/urls/<%= id %>/delete">
+                  <!-- Adding Delete button -->
                   <button type="submit" class="btn btn-custom">Delete</button>
                 </form>
               </td>
@@ -70,6 +73,7 @@
         </tbody>
       </table>
     </form>
+    <!-- Link to create a new shortened URL, directing to the /urls/new route -->
     <a href="/urls/new">Shorten a New URL</a>
 
     <!-- Bootstrap JS -->

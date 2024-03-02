@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- Defines the document type and version of HTML -->
+<html lang="en"> <!-- Specifies the language of the document -->
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8" /> <!-- Character encoding for the document -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    /> <!-- Responsive viewport settings for mobile devices -->
 
     <!-- Bootstrap CSS -->
     <link
@@ -13,8 +13,9 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
-    />
-    <title>URL - TinyApp Example</title>
+    /> <!-- Linking to Bootstrap CSS file -->
+
+    <title>URL - TinyApp Example</title> <!-- Document tile -->
   </head>
 
   <body>
@@ -24,15 +25,17 @@
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
+        <h5 class="card-title">TinyURL for: <%= longURL %></h5> <!-- Displaying the long URL -->
         <p class="card-text">
-          Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
+          Short URL ID: <a href="/u/<%= id %>"><%= id %></a> <!-- Displaying the short URL ID-->
         </p>
        <!-- Form for updating the long URL -->
        <form method="POST" action="/urls/<%= id %>">
         <div class="form-group">
+          <!-- Input field for updating the long URL -->
           <input type="text" class="form-control" id="updatedLongURL" name="updatedLongURL" placeholder="Enter updated long URL" required>
         </div>
+        <!-- Submit button for updating the URL -->
        <button type="submit" class="btn btn-primary" style="margin-top: 1em;">Update URL</button>
       </form>
     </div>
