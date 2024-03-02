@@ -124,6 +124,18 @@ app.post("/urls/:id", (req, res) => {
   }
 });
 
+// POST route to log in
+app.post("/login", (req, res) => {
+  // Retrieve the username from the requst body
+  const username = req.body.username;
+
+  // Set a cookie named 'username' with the value submitted fromt he request body
+  res.cookie('username', username);
+
+  // Redirect the browser back to the /urls page
+  res.redirect('/urls');
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicating that the server is running and listening on the specified port
