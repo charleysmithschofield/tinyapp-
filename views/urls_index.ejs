@@ -16,12 +16,17 @@
     />
     <title>TinyApp</title>
      <!-- Custom CSS for button styling -->
-  <style>
-    .btn-custom {
-      background-color: #ffffff; /* White background */
-      color: #ff0000; /* Red text color */
-      border: 1px solid #ff0000; /* Red border */
-    }
+     <style>
+      .btn-custom {
+        background-color: #ffffff; /* White background */
+        color: #ff0000; /* Red text color */
+        border: 1px solid #ff0000; /* Red border */
+      }
+      .btn-edit {
+        background-color: #ffffff; /* White background */
+        color: #0000ff; /* Blue text color */
+        border: 1px solid #0000ff; /* Blue border */
+      }
   </style>
 </head>
 <body>
@@ -35,37 +40,38 @@
       <table class="table">
         <thead>
           <tr>
-            <!-- Table headers for Short URL ID, Long URL, Actions and Edit-->
+            <!-- Table headers for Short URL ID, Long URL, Edit and Delete-->
             <th scope="col">Short URL ID</th>
             <th scope="col">Long URL</th>
-            <th scope="col">Actions</th>
             <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Loop to iterate over each key in the urls object-->
+         <!-- Loop to iterate over each key in the urls object-->
           <% for (let id in urls) { %>
             <tr>
               <!-- Displaying the ID of the shortened URL-->
               <td><%= id %></td>
               <!-- Displaying the original URL-->
               <td><%= urls[id] %></td>
+              <!-- Edit Link for each URL-->
+              <td>
+                <a href="/urls/<%= id %>" class="btn btn-edit">Edit</a> <!-- Add btn-edit class -->
+              </td>
               <!-- Adding form for deleting the URL-->
               <td>
                 <form method="POST" action="/urls/<%= id %>/delete">
-                <button type="submit" class="btn btn-custom">Delete</button>
-              </td>
-              <!-- Edit Link for each UR-->
-              <td>
-                <a href="/urls/<%= id %>">Edit</a>
+                  <button type="submit" class="btn btn-custom">Delete</button>
+                </form>
               </td>
             </tr>
           <% } %>
         </tbody>
       </table>
-      <!-- Link for shortenin a new URL-->
-      <a href="/urls/new">Shorten a New URL</a>
-    </main>
+    </form>
+    <a href="/urls/new">Shorten a New URL</a>
+
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

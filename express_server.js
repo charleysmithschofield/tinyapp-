@@ -103,6 +103,27 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
+// POST route to update a URL
+app.post("/urls/:id", (req, res) => {
+  // Extract the URL ID from the request parameters
+  const urlId = req.params.id;
+  
+  // Retrieve the updated long URL from the request body
+  const updatedLongURL = req.body.updatedLongURL;
+
+  // Check if the URL ID exists in the urlDatabase
+  if (urlDatabase[urlId]) {
+    // Update the long URL in the urlDatabase with the new value
+    urlDatabase[urlId] = updatedLongURL;
+    
+    // Redirect the client back to the /urls page
+    res.redirect("/urls");
+  } else {
+    // If the URL ID doesn't exist, send a 404 error response
+    res.status(404).send("URL not found");
+  }
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicating that the server is running and listening on the specified port

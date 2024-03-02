@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -25,10 +31,9 @@
        <!-- Form for updating the long URL -->
        <form method="POST" action="/urls/<%= id %>">
         <div class="form-group">
-          <label for="updatedLongURL">Updated Long URL:</label>
           <input type="text" class="form-control" id="updatedLongURL" name="updatedLongURL" placeholder="Enter updated long URL" required>
         </div>
-        <button type="submit" class="btn btn-primary">Update URL</button>
+       <button type="submit" class="btn btn-primary" style="margin-top: 1em;">Update URL</button>
       </form>
     </div>
     <div class="card-footer text-muted"></div>
