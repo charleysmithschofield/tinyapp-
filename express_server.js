@@ -98,16 +98,19 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-// GET route for "/urls/new" endpoint
 app.get("/urls/new", (req, res) => {
+  // Retrieve the user object based on the user_id cookie
+  const user = getUserById(req.cookies["user_id"]);
+
   // Provide the urlDatabase to the urls_index template
   const templateVars = {
-    user: req.cookies["user_id"], // Access user_id from cookies
+    user: user, // Pass the user object to the template
     urls: urlDatabase
   };
   // Render the urls_new template for creating a new shortened URL
   res.render("urls_new", templateVars);
 });
+
 
 
 // GET route for the "/urls/:id" endpoint
@@ -135,6 +138,13 @@ app.get("/register", (req, res) => {
   // Pass the user_id retrieved from cookies to the template
   res.render("register", { user: user });
 });
+
+// GET route for the "/login" endpoint
+app.get("/login", (req, res) => {
+  // Render the login endpoint
+  res.render("login");
+});
+
 
 // POST route for the "/urls" endpoint
 app.post("/urls", (req, res) => {
@@ -188,14 +198,23 @@ app.post("/urls/:id", (req, res) => {
 
 // POST route to log in
 app.post("/login", (req, res) => {
-  // Retrieve the username from the requst body
-  const username = req.body.userId;
+  // Retrieve the email and password from the request body
+  const email = req.body.email;
+  const password = req.body.password;
 
-  // Set a cookie named 'username' with the value submitted from the request body
-  res.cookie('user_id', username);
+  // Find user by email
+  const user = getUserByEmail(email);
 
-  // Redirect the user back to the /urls page
-  res.redirect('/urls');
+  // Check if user exists and if the password matches
+  if (user && user.password === password) {
+    // Set a cookie named 'user_id' with the user's ID
+    res.cookie('user_id', user.id);
+    // Redirect the user back to the /urls page
+    res.redirect('/urls');
+  } else {
+    // If user does not exist or password is incorrect, send error status code and error message
+    res.status(401).send("Error: Incorrect email or password");
+  }
 });
 
 // POST route to logout
