@@ -160,6 +160,12 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 });
 
+// GET route for the /register endpoint
+app.get("/register", (req, res) => {
+  // Render the register template for the registration form
+  res.render("register", { username: req.cookies.username });
+});
+
 // Start the server and listen for incoming requests on the specified port
 app.listen(PORT, () => {
   // Log a message indicating that the server is running and listening on the specified port
