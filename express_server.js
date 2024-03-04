@@ -148,7 +148,15 @@ app.post("/login", (req, res) => {
   // Set a cookie named 'username' with the value submitted fromt he request body
   res.cookie('username', username);
 
-  // Redirect the browser back to the /urls page
+  // Redirect the user back to the /urls page
+  res.redirect('/urls');
+});
+
+// POST route to log out
+app.post("/logout", (req, res) => {
+  // Clear the username cookie
+  res.clearCookie('username');
+  // Redirect the user back to the /urls page
   res.redirect('/urls');
 });
 

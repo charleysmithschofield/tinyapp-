@@ -19,18 +19,24 @@
       
       <!-- Right-aligned items using ms-auto -->
       <div class="ms-auto">
-        <!-- Login Form -->
-        <form class="d-flex" action="/login" method="POST">
-          <!-- Input field for entering username -->
-          <input type="text" name="username" class="form-control me-2" placeholder="Username">
-          <!-- Submit button for logging in -->
-          <button type="submit" class="btn btn-light">Login</button>
-        </form>
         <!-- Display username if available -->
         <% if (username) { %>
-          <p class="d-flex text-light"> Logged in as: <%= username %></p>
-        <% } %>
+          <div class="d-flex align-items-center text-light">
+          <p class="me-2"> Logged in as: <%= username %></p>
+          <!-- Logout Form -->
+          <form class="d-flex" action="/logout" method="POST">
+            <button type="submit" class="btn btn-light">Logout</button>
+          </form>
+          <% } else { %>
+          <!-- Login Form -->
+          <form class="d-flex" action="/login" method="POST">
+            <!-- Input field for entering username -->
+            <input type="text" name="username" class="form-control me-2" placeholder="Username">
+            <!-- Submit button for logging in -->
+            <button type="submit" class="btn btn-light">Login</button>
+          </form>
+          <% } %>
+        </div>
       </div>
-    </div>
   </nav>
 </header>
