@@ -1,14 +1,18 @@
 // Import the express module from the library
 const express = require("express");
 
+// Import cookie-parser
+const cookieParser = require("cookie-parser");
+
 // Create an instance of Express
 const app = express();
-
 // Define the port number for the server to listen on (8080 default port)
 const PORT = 8080;
 
 // Middle-ware to parse the URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
+// Middle-ware to parse the cookies
+app.use(cookieParser());
 
 // Sets view engine to ejs
 app.set("view engine", "ejs");
@@ -55,22 +59,34 @@ app.get("/hello", (req, res) => {
 // Route handler for the "/urls" endpoint
 app.get("/urls", (req, res) => {
   // Provide the urlDatabase to the urls_index template
-  const templateVars = { urls: urlDatabase };
+  const templateVars = {
+    username: req.cookies["username"], // Access username from cookies
+    urls: urlDatabase
+  };
   res.render("urls_index", templateVars);
 });
 
 // Route handler for URLs new page
 app.get("/urls/new", (req, res) => {
+  // Provide the urlDatabase to the urls_index template
+  const templateVars = {
+    username: req.cookies["username"], // Access username from cookies
+    urls: urlDatabase
+  };
   // Render the urls_new template for creating a new shortened URL
-  res.render("urls_new");
+  res.render("urls_new", templateVars);
 });
 
 // Route handler for the "/urls/:id" endpoint
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
   const longURL = urlDatabase[req.params.id];
-  // Provide the id and longURL to the urls_show template
-  const templateVars = { id: req.params.id, longURL: longURL };
+  // Provide the id, longURL, and username to the urls_show template
+  const templateVars = {
+    id: req.params.id,
+    longURL: longURL,
+    username: req.cookies["username"] // Access username from cookies
+  };
   res.render("urls_show", templateVars);
 });
 
@@ -86,7 +102,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = longURL;
   
   // Redirect to the new URL's page
-  res.redirect(`/urls/${shortURL}`);
+  res.redirect(`/urls`);
 });
 
 // POST route to delete a URL
@@ -122,6 +138,26 @@ app.post("/urls/:id", (req, res) => {
     // If the URL ID doesn't exist, send a 404 error response
     res.status(404).send("URL not found");
   }
+});
+
+// POST route to log in
+app.post("/login", (req, res) => {
+  // Retrieve the username from the requst body
+  const username = req.body.username;
+
+  // Set a cookie named 'username' with the value submitted fromt he request body
+  res.cookie('username', username);
+
+  // Redirect the user back to the /urls page
+  res.redirect('/urls');
+});
+
+// POST route to log out
+app.post("/logout", (req, res) => {
+  // Clear the username cookie
+  res.clearCookie('username');
+  // Redirect the user back to the /urls page
+  res.redirect('/urls');
 });
 
 // Start the server and listen for incoming requests on the specified port
