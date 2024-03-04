@@ -81,8 +81,12 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
   const longURL = urlDatabase[req.params.id];
-  // Provide the id and longURL to the urls_show template
-  const templateVars = { id: req.params.id, longURL: longURL };
+  // Provide the id, longURL, and username to the urls_show template
+  const templateVars = {
+    id: req.params.id,
+    longURL: longURL,
+    username: req.cookies["username"] // Access username from cookies
+  };
   res.render("urls_show", templateVars);
 });
 
@@ -98,7 +102,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = longURL;
   
   // Redirect to the new URL's page
-  res.redirect(`/urls/${shortURL}`);
+  res.redirect(`/urls`);
 });
 
 // POST route to delete a URL
