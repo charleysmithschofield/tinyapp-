@@ -139,11 +139,10 @@ app.get("/register", (req, res) => {
   res.render("register", { user: user });
 });
 
-// GET route for the "/login" endpoint
-app.get("/login", (req, res) => {
-  // Render the login endpoint
-  res.render("login");
+app.get('/login', (req, res) => {
+  res.render('login', { user: req.user }); // Assuming user data is available in req.user
 });
+
 
 
 // POST route for the "/urls" endpoint
@@ -213,7 +212,7 @@ app.post("/login", (req, res) => {
     res.redirect('/urls');
   } else {
     // If user does not exist or password is incorrect, send error status code and error message
-    res.status(401).send("Error: Incorrect email or password");
+    res.status(403).send("Error: Incorrect email or password");
   }
 });
 
@@ -222,7 +221,7 @@ app.post("/logout", (req, res) => {
   // Clear the username cookie
   res.clearCookie('user_id');
   // Redirect the user back to the /urls page
-  res.redirect('/urls');
+  res.redirect('/login');
 });
 
 
