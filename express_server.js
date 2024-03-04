@@ -1,14 +1,18 @@
 // Import the express module from the library
 const express = require("express");
 
+// Import cookie-parser
+const cookieParser = require("cookie-parser");
+
 // Create an instance of Express
 const app = express();
-
 // Define the port number for the server to listen on (8080 default port)
 const PORT = 8080;
 
 // Middle-ware to parse the URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
+// Middle-ware to parse the cookies
+app.use(cookieParser());
 
 // Sets view engine to ejs
 app.set("view engine", "ejs");
@@ -55,14 +59,22 @@ app.get("/hello", (req, res) => {
 // Route handler for the "/urls" endpoint
 app.get("/urls", (req, res) => {
   // Provide the urlDatabase to the urls_index template
-  const templateVars = { urls: urlDatabase };
+  const templateVars = {
+    username: req.cookies["username"], // Access username from cookies
+    urls: urlDatabase
+  };
   res.render("urls_index", templateVars);
 });
 
 // Route handler for URLs new page
 app.get("/urls/new", (req, res) => {
+  // Provide the urlDatabase to the urls_index template
+  const templateVars = {
+    username: req.cookies["username"], // Access username from cookies
+    urls: urlDatabase
+  };
   // Render the urls_new template for creating a new shortened URL
-  res.render("urls_new");
+  res.render("urls_new", templateVars);
 });
 
 // Route handler for the "/urls/:id" endpoint
