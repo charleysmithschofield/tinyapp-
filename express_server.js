@@ -38,7 +38,7 @@ const users = {
 };
 
 // Function to generate a string of 6 random alphanumeric characters
-function generateRandomString() {
+const generateRandomString = function() {
   // Variable called randomString to store the random alphanumeric string
   let randomString = '';
   // Variable called characters containing the alphabet in lower and uppercase, as well as, the numbers from 0 to 9
@@ -52,7 +52,7 @@ function generateRandomString() {
 };
 
 // Function to retireve user object by user ID
-function getUserById(userId) {
+const getUserById = function(userId) {
   // Loop through the users object to find the user with the matching ID
   for (const userIdKey in users) {
     // Check if the user ID matches the provided userId
@@ -65,25 +65,25 @@ function getUserById(userId) {
   return null;
 };
 
-// Route handler for the root endpoint
+// GET route for the root endpoint
 app.get("/", (req, res) => {
   // Send "Hello!" as the response when a GET request is made to the root endpoint
   res.send("Hello!");
 });
 
-// Route handler for the "/urls.json" endpoint
+// GET route for "/urls.json" endpoint
 app.get("/urls.json", (req, res) => {
   // Send the urlDatabase object as a JSON response when a GET request is made to the "/urls.json" endpoint
   res.json(urlDatabase);
 });
 
-// Route handler for the "/hello" endpoint
+// GET route for "/hello" endpoint
 app.get("/hello", (req, res) => {
   // Send the HTML response with a greeting to the world
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-// Route handler for the "/urls" endpoint
+// GET route for "/urls" endpoint
 app.get("/urls", (req, res) => {
   // Retrieve the user object based on the user_id cookie
   const user = getUserById(req.cookies["user_id"]);
@@ -98,18 +98,19 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-// Route handler for URLs new page
+// GET route for "/urls/new" endpoint
 app.get("/urls/new", (req, res) => {
   // Provide the urlDatabase to the urls_index template
   const templateVars = {
-    user_id: req.cookies["user_id"], // Access user_id from cookies
+    user: req.cookies["user_id"], // Access user_id from cookies
     urls: urlDatabase
   };
   // Render the urls_new template for creating a new shortened URL
   res.render("urls_new", templateVars);
 });
 
-// Route handler for the "/urls/:id" endpoint
+
+// GET route for the "/urls/:id" endpoint
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
   const longURL = urlDatabase[req.params.id];
@@ -122,7 +123,20 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-// Route handler for the "/urls" endpoint to handle POST requests
+// GET route for the "/register" endpoint
+app.get("/register", (req, res) => {
+  // Define user_id variable based on the user_id cookie
+  const user_id = req.cookies.user_id;
+
+  // Define the user object based on the user_id
+  const user = getUserById(user_id);
+
+  // Render the register template for the registration form
+  // Pass the user_id retrieved from cookies to the template
+  res.render("register", { user: user });
+});
+
+// POST route for the "/urls" endpoint
 app.post("/urls", (req, res) => {
   // Retrieve longURL from the request body
   const longURL = req.body.longURL;
@@ -184,7 +198,7 @@ app.post("/login", (req, res) => {
   res.redirect('/urls');
 });
 
-// POST route to log out
+// POST route to logout
 app.post("/logout", (req, res) => {
   // Clear the username cookie
   res.clearCookie('user_id');
@@ -192,39 +206,55 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 });
 
-// GET route for the /register endpoint
-app.get("/register", (req, res) => {
-  // Define user_id variable based on the user_id cookie
-  const user_id = req.cookies.user_id;
 
-  // Define the user object based on the user_id
-  const user = getUserById(user_id);
+// Helper function to find user by email
+const getUserByEmail = function(email) {
+  // For in loop to iterate through the users
+  for (const userId in users) {
+    // Check if the email used matches an email already in the current users
+    if (users[userId].email === email) {
+      return users[userId];
+    }
+  }
+  // If user is not found, return null
+  return null;
+};
 
-  // Render the register template for the registration form
-  // Pass the user_id retrieved from cookies to the template
-  res.render("register", { user: user });
-});
 
-
-// POST route for the /register endpoint
+// POST route for the "/register" endpoint
 app.post("/register", (req, res) => {
 
+  // Retrieve email and password from the request body
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Check if the email or password is an empty string
+  if (email === "" || password === "") {
+    // If either is empty, send a 400 Bad Request status code with error message indicating empty email or password
+    return res.status(400).send("Error: Empty Email or Password");
+  }
+
+  // check if the email already exists
+  if (getUserByEmail(email)) {
+    // If the email already exists, send a 500 Bad Request status code with an error message indicating the email already exists
+    return res.status(400).send("Error: Email already exists");
+  }
+
+  // Continue with registration process
   // Generate a random user object
   const userId = generateRandomString();
   
   // Create a new user object
   const newUser = {
     id: userId,
-    email: req.body.email,
-    password: req.body.password
+    email: email,
+    password: password
   };
   
   // Add the new user to the users object
   users[userId] = newUser;
-  
   // Log the new user for testing
   console.log("New user registered:", newUser);
-  
   // Set a user_id cookie containing the user's new generated ID
   res.cookie('user_id', userId);
   
