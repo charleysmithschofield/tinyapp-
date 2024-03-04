@@ -163,6 +163,7 @@ app.post("/logout", (req, res) => {
 // GET route for the /register endpoint
 app.get("/register", (req, res) => {
   // Render the register template for the registration form
+  // Pass the username retrieved from cookies to the template
   res.render("register", { username: req.cookies.username });
 });
 
