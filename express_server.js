@@ -17,10 +17,24 @@ app.use(cookieParser());
 // Sets view engine to ejs
 app.set("view engine", "ejs");
 
-// A database storing shortened URLs as key-value pairs
+// Database to store shortened URLs as key-value pairs
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+};
+
+// Database to store users
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  }
 };
 
 // Function to generate a string of 6 random alphanumeric characters
@@ -165,6 +179,33 @@ app.get("/register", (req, res) => {
   // Render the register template for the registration form
   // Pass the username retrieved from cookies to the template
   res.render("register", { username: req.cookies.username });
+});
+
+
+// POST route for the /register endpoint
+app.post("/register", (req, res) => {
+
+  // Generate a random user object
+  const userId = generateRandomString();
+  
+  // Create a new user object
+  const newUser = {
+    id: userId,
+    email: req.body.email,
+    password: req.body.password
+  };
+  
+  // Add the new user to the users object
+  users[userId] = newUser;
+  
+  // Log the new user for testing
+  console.log("New user registered:", newUser);
+  
+  // Set a user_id cookie containing the user's new generated ID
+  res.cookie('user_id', userId);
+  
+  // Redirect user to the /urls page
+  res.redirect("/urls");
 });
 
 // Start the server and listen for incoming requests on the specified port
