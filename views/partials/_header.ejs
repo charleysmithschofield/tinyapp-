@@ -19,10 +19,10 @@
       
       <!-- Right-aligned items using ms-auto -->
       <div class="ms-auto">
-        <!-- Display username if available -->
-        <% if (username) { %>
+        <!-- Display user if available -->
+        <% if (user) { %>
           <div class="d-flex align-items-center text-light">
-          <p class="me-2"> Logged in as: <%= username %></p>
+          <p class="me-2"> Logged in as: <%= user.email %></p>
           <!-- Logout Form -->
           <form class="d-flex" action="/logout" method="POST">
             <button type="submit" class="btn btn-light">Logout</button>

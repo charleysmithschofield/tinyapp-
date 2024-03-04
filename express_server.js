@@ -51,6 +51,19 @@ function generateRandomString() {
   return randomString;
 };
 
+// Function to retireve user object by user ID
+function getUserById(userId) {
+  // Loop through the users object to find the user with the matching ID
+  for (const userIdKey in users) {
+    // Check if the user ID matches the provided userId
+    if (userId === users[userIdKey].id) {
+      // If found, return the user object
+      return users[userIdKey];
+    }
+  }
+  // If user is not found, return null
+  return null;
+};
 
 // Route handler for the root endpoint
 app.get("/", (req, res) => {
@@ -72,11 +85,16 @@ app.get("/hello", (req, res) => {
 
 // Route handler for the "/urls" endpoint
 app.get("/urls", (req, res) => {
-  // Provide the urlDatabase to the urls_index template
+  // Retrieve the user object based on the user_id cookie
+  const user = getUserById(req.cookies["user_id"]);
+
+  // Create template variable object to pass to he templateVars
   const templateVars = {
-    username: req.cookies["username"], // Access username from cookies
-    urls: urlDatabase
+    user: user, // Pass the user object to the template
+    urls: urlDatabase // Pass the urlDatabase object to the template
   };
+
+  // Render the "urls_index" template with the template variables
   res.render("urls_index", templateVars);
 });
 
@@ -84,7 +102,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   // Provide the urlDatabase to the urls_index template
   const templateVars = {
-    username: req.cookies["username"], // Access username from cookies
+    user_id: req.cookies["user_id"], // Access user_id from cookies
     urls: urlDatabase
   };
   // Render the urls_new template for creating a new shortened URL
@@ -95,11 +113,11 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
   const longURL = urlDatabase[req.params.id];
-  // Provide the id, longURL, and username to the urls_show template
+  // Provide the id, longURL, and user_id to the urls_show template
   const templateVars = {
     id: req.params.id,
     longURL: longURL,
-    username: req.cookies["username"] // Access username from cookies
+    user_id: req.cookies["user_id"] // Access user_id from cookies
   };
   res.render("urls_show", templateVars);
 });
@@ -157,10 +175,10 @@ app.post("/urls/:id", (req, res) => {
 // POST route to log in
 app.post("/login", (req, res) => {
   // Retrieve the username from the requst body
-  const username = req.body.username;
+  const username = req.body.userId;
 
-  // Set a cookie named 'username' with the value submitted fromt he request body
-  res.cookie('username', username);
+  // Set a cookie named 'username' with the value submitted from the request body
+  res.cookie('user_id', username);
 
   // Redirect the user back to the /urls page
   res.redirect('/urls');
@@ -169,16 +187,22 @@ app.post("/login", (req, res) => {
 // POST route to log out
 app.post("/logout", (req, res) => {
   // Clear the username cookie
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   // Redirect the user back to the /urls page
   res.redirect('/urls');
 });
 
 // GET route for the /register endpoint
 app.get("/register", (req, res) => {
+  // Define user_id variable based on the user_id cookie
+  const user_id = req.cookies.user_id;
+
+  // Define the user object based on the user_id
+  const user = getUserById(user_id);
+
   // Render the register template for the registration form
-  // Pass the username retrieved from cookies to the template
-  res.render("register", { username: req.cookies.username });
+  // Pass the user_id retrieved from cookies to the template
+  res.render("register", { user: user });
 });
 
 
