@@ -1,3 +1,4 @@
+<!-- urls_new-->
 <!DOCTYPE html> <!-- Defines the document type and version of HTML -->
 <html lang="en"> <!-- Defines the language of the document -->
   <head>
@@ -23,6 +24,9 @@
 
     <main class="container mt-4">
       <h3>Create TinyURL</h3> <!-- Heading for the form section -->
+      <% if (!user) { %> <!-- Add this line to check if the user is logged in -->
+        <p>You must be logged in to shorten URLs.</p> <!-- Display this message if the user is not logged in -->
+      <% } else { %> <!-- Close the if condition -->
       <form class="form-inline" action="/urls" method="POST"> <!-- Form for creating a new TinyURL -->
         <div class="form-group mb-2">
           <label for="longURL">Enter a URL:</label> <!-- Label for the input field-->
@@ -36,6 +40,7 @@
           <button type="submit" class="btn btn-primary" style="margin-top: 1em;">Update URL</button> <!-- Submit button for the form -->
         </div>
       </form>
+      <% } %> <!-- Closes the else condition -->
     </main>
     <!-- Bootstrap JS -->
     <script

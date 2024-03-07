@@ -194,7 +194,7 @@ app.post("/urls", (req, res) => {
   const user = getUserById(req.cookies.user_id);
   if (!user) {
     // If user is not logged in, respond with an HTML message
-    return res.status(403).render("urls_not_logged_in", { message: "You must be logged in to shorten URLs." });
+    return res.status(403).send("<h1>You must be logged in to shorten URLs.</h1>");
   }
 
   // Retrieve longURL from the request body
