@@ -14,16 +14,15 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     /> <!-- Linking to Bootstrap CSS file -->
-
     <title>New URL - TinyApp Example</title> <!-- Document title -->
   </head>
-
   <body>
-        <!-- Include header partial -->
+   
+    <!-- Include header partial -->
     <%- include('partials/_header') %>
 
-    <main style="margin: 1em;">
-      <h3>Create TinyURL</h3> <!-- Geading for the form section -->
+    <main class="container mt-4">
+      <h3>Create TinyURL</h3> <!-- Heading for the form section -->
       <form class="form-inline" action="/urls" method="POST"> <!-- Form for creating a new TinyURL -->
         <div class="form-group mb-2">
           <label for="longURL">Enter a URL:</label> <!-- Label for the input field-->
