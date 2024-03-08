@@ -102,6 +102,7 @@ app.get("/urls", (req, res) => {
   // Retrieve the user object based on the user_id cookie
   const user = getUserById(req.cookies["user_id"]);
 
+
   // Create template variable object to pass to he templateVars
   const templateVars = {
     user: user, // Pass the user object to the template
@@ -147,7 +148,14 @@ app.get("/urls/:id", (req, res) => {
     longURL: longURL,
     user: getUserById(req.cookies["user_id"]) // Pass the user object to the template
   };
-  res.render("urls_show", templateVars);
+
+  // Check if the short URL exists in the urlDatabase
+  if (urlDatabase[req.params.id]) {
+    // Render the
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(404).send("Shortened URL not found");
+  }
 });
 
 
@@ -194,7 +202,7 @@ app.post("/urls", (req, res) => {
   const user = getUserById(req.cookies.user_id);
   if (!user) {
     // If user is not logged in, respond with an HTML message
-    return res.status(403).send("<h1>You must be logged in to shorten URLs.</h1>");
+    return res.status(403).render("urls_not_logged_in", { message: "You must be logged in to shorten URLs." });
   }
 
   // Retrieve longURL from the request body
