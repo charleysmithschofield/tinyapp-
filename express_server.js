@@ -76,6 +76,23 @@ const getUserById = function(userId) {
   return null;
 };
 
+// Filter URLs by userID
+const urlsForUser = function(userID) {
+  // Initialize an empty object to store the user's URLs
+  const userURLs = {};
+  // Loop through all URLs in the database
+  for (const shortURL in urlDatabase) {
+    // Check if the userID matches the userID associated with the URL
+    if (urlDatabase[shortURL].userID === userID) {
+      // If it matches, add the URL to the userURLs object
+      userURLs[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  // Return the URLs belonging to the user
+  return userURLs;
+};
+
+
 
 // GETS HERE -------------------------------------------
 
@@ -117,6 +134,8 @@ app.get("/urls", (req, res) => {
   `);
   }
 
+  // Filter URLs to display only the URLs belonging to the logged-in user
+  const userURLs = urlsForUser(user.id);
 
 
   // Create template variable object to pass to he templateVars
@@ -156,21 +175,36 @@ app.get("/urls/new", (req, res) => {
 
 // GET route for the "/urls/:id" endpoint
 app.get("/urls/:id", (req, res) => {
-  // Fetch the long URL from the urlDatabase by providing the corresponding id
-  const shortURL = req.params.id; // Corrected: use req.params.id as the short URL
-  
+  // Fetch the short URL from the request parameters
+  const shortURL = req.params.id;
+
+  // Retrieve the user object based on the user_id cookie
+  const user = getUserById(req.cookies["user_id"]);
+
   // Check if the short URL exists in the urlDatabase
-  if (urlDatabase[shortURL]) { // Corrected: use shortURL directly as the key
-    // Provide the id, longURL, and user_id to the urls_show template
-    const templateVars = {
-      id: shortURL, // Corrected: use shortURL
-      longURL: urlDatabase[shortURL].longURL, // Corrected: use shortURL as the key
-      user: getUserById(req.cookies["user_id"]) // Pass the user object to the template
-    };
-    // Render the urls_show
-    res.render("urls_show", templateVars);
+  if (urlDatabase[shortURL]) {
+    // Check if the user is logged in
+    if (user) {
+      // Check if the URL belongs to the logged-in user
+      if (urlDatabase[shortURL].userID === user.id) {
+        // Provide the id, longURL, and user_id to the urls_show template
+        const templateVars = {
+          id: shortURL,
+          longURL: urlDatabase[shortURL].longURL,
+          user: user
+        };
+        // Render the urls_show template
+        res.render("urls_show", templateVars);
+      } else {
+        // If the URL does not belong to the logged-in user, send an error message
+        res.status(403).send("You do not have permission to access this URL.");
+      }
+    } else {
+      // If the user is not logged in, send a relevant error message
+      res.status(401).send("You must be logged in to access this URL.");
+    }
   } else {
-    // If the short URL does not exist, send an error message stating the shortened URL is not found
+    // If the short URL does not exist, send a 404 error message
     res.status(404).send("Shortened URL not found");
   }
 });
@@ -240,16 +274,26 @@ app.post("/urls", (req, res) => {
 
 // POST route to delete a URL
 app.post("/urls/:id/delete", (req, res) => {
+  // Retrieve the URL ID from the request parameters
   const urlId = req.params.id;
-  // Check if the URL exists in the urlDatabase
-  if (urlDatabase[urlId]) {
-    // Delete the URL from the urlDatabase
-    delete urlDatabase[urlId];
-    // Redirect back to the urls index page ("/urls")
-    res.redirect("/urls");
-  } else {
-    res.status(404).send("URL not found");
+
+  // Check if the user is logged in
+  const userId = req.cookies.user_id;
+  if (!userId) {
+    // If user is not logged in, send an error message
+    return res.status(401).send("Error: You are not authorized to delete this URL.");
   }
+
+  // Check if the logged-in user is the owner of the URL
+  if (urlDatabase[urlId].userID !== userId) {
+    // If user is now the owner of the URL, send an error message
+    return res.status(403).send("Error: You are not authorized to delete this URL.");
+  }
+
+  // Delete the URL from the urlDatabase
+  delete urlDatabase[urlId];
+  // Redirect back to the urls index page ("/urls")
+  res.redirect("/urls");
 });
 
 
@@ -276,27 +320,31 @@ app.get("/u/:id", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   // Extract the URL ID from the request parameters
   const urlId = req.params.id;
-  console.log("URL ID:", urlId); // Log URL ID to console
-  
-  // Retrieve the updated long URL from the request body
-  const updatedLongURL = req.body.updatedLongURL;
-  console.log("Updated Long URL:", updatedLongURL); // Log updated URL to console
+  // Get the logged in user ID
+  const userId = req.cookies.user_id;
 
   // Check if the URL ID exists in the urlDatabase
-  if (urlDatabase[urlId]) {
-    // Update the long URL in the urlDatabase with the new value
-    urlDatabase[urlId].longURL = updatedLongURL;
-    
-    // Redirect the client back to the /urls page
-    res.redirect("/urls");
-  } else {
-    // If the URL ID doesn't exist, send a 404 error response
-    res.status(404).send("URL not found");
+  if (!urlDatabase[urlId]) {
+    return res.status(404).send("URL not found");
   }
+
+  // Check if the user is logged in
+  if (!userId) {
+    return res.status(401).send("You must be logged in to update a URL");
+  }
+  // Check if the logged-in user owns the URL
+  if (urlDatabase[urlId].userID !== userId) {
+    return res.status(403).send("You are not authorized to update this URL");
+  }
+  // Retrieve the updated long URL from the request body
+  const updatedLongURL = req.body.updatedLongURL;
+
+  // Update the long URL in the urlDatabase with the new value
+  urlDatabase[urlId].longURL = updatedLongURL;
+
+  // Redirect the client back to the /urls page
+  res.redirect("/urls");
 });
-
-
-
 
 // POST route to /login
 app.post("/login", (req, res) => {
