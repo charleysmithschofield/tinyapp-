@@ -56,8 +56,8 @@
             <tr>
               <!-- Displaying the ID of the shortened URL-->
               <td><%= id %></td>
-              <!-- Displaying the original URL-->
-              <td><%= urls[id] %></td>
+              <!-- Access the longURL property of each URL object-->
+              <td><%= urls[id].longURL %></td>
               <!-- Edit Link for each URL-->
               <td>
                 <a href="/urls/<%= id %>" class="btn btn-edit">Edit</a> <!-- Add btn-edit class -->

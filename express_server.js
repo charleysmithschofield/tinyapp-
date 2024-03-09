@@ -214,8 +214,10 @@ app.get('/login', (req, res) => {
 
 // POST route for the /urls endpoint
 app.post("/urls", (req, res) => {
+  // Define userID
+  const userID = req.cookies.user_id;
   // Check if the user is logged in
-  const user = getUserById(req.cookies.user_id);
+  const user = getUserById(userID);
   if (!user) {
     // If the user is not logged in, display an HTML message stating they must be logged in to shorten URLs
     return res.status(403).send("<h1>You must be logged in to shorten URLs.</h1>");
@@ -227,8 +229,8 @@ app.post("/urls", (req, res) => {
   // Generate shortURL
   const shortURL = generateRandomString();
 
-  // Add shortURL and longURL to urlDatabase
-  urlDatabase[shortURL] = longURL;
+  // Adjust the following line to include both longURL and userID in the structure
+  urlDatabase[shortURL] = { longURL, userID };
 
   // Redirect to the new URL's page
   res.redirect(`/urls`);
@@ -263,9 +265,10 @@ app.get("/u/:id", (req, res) => {
     res.redirect(longURL.longURL);
   } else {
     // If the short URL does not exist, send a 404 error response with a relevant message
-    res.status(404).send("Shortened URL not");
+    res.status(404).send("Shortened URL not found");
   }
 });
+
 
 
 
