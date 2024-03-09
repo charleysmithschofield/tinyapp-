@@ -25,8 +25,14 @@ app.set("view engine", "ejs");
 
 // Database to store shortened URLs as key-value pairs
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "22@22.ca",
+  },
+  i3BoGr: {
+    longURL: "http://www.google.com",
+    userID: "22@22.ca",
+  },
 };
 
 // Database to store users
@@ -102,6 +108,16 @@ app.get("/urls", (req, res) => {
   // Retrieve the user object based on the user_id cookie
   const user = getUserById(req.cookies["user_id"]);
 
+  // Check if the user is not logged in
+  if (!user) {
+    // If the user is not logged in, render an error message suggesting to log in or register first
+    return res.status(401).send(`
+    <h1>You must log in or register first to view your shortened URLs.</h1>
+    <p><a href="/login">Log in</a> or <a href="/register">Register</a></>
+  `);
+  }
+
+
 
   // Create template variable object to pass to he templateVars
   const templateVars = {
@@ -141,19 +157,20 @@ app.get("/urls/new", (req, res) => {
 // GET route for the "/urls/:id" endpoint
 app.get("/urls/:id", (req, res) => {
   // Fetch the long URL from the urlDatabase by providing the corresponding id
-  const longURL = urlDatabase[req.params.id];
-  // Provide the id, longURL, and user_id to the urls_show template
-  const templateVars = {
-    id: req.params.id,
-    longURL: longURL,
-    user: getUserById(req.cookies["user_id"]) // Pass the user object to the template
-  };
-
+  const shortURL = req.params.id; // Corrected: use req.params.id as the short URL
+  
   // Check if the short URL exists in the urlDatabase
-  if (urlDatabase[req.params.id]) {
-    // Render the
+  if (urlDatabase[shortURL]) { // Corrected: use shortURL directly as the key
+    // Provide the id, longURL, and user_id to the urls_show template
+    const templateVars = {
+      id: shortURL, // Corrected: use shortURL
+      longURL: urlDatabase[shortURL].longURL, // Corrected: use shortURL as the key
+      user: getUserById(req.cookies["user_id"]) // Pass the user object to the template
+    };
+    // Render the urls_show
     res.render("urls_show", templateVars);
   } else {
+    // If the short URL does not exist, send an error message stating the shortened URL is not found
     res.status(404).send("Shortened URL not found");
   }
 });
@@ -175,7 +192,6 @@ app.get("/register", (req, res) => {
   // Pass the user_id retrieved from cookies to the template
   res.render("register", { user: user });
 });
-
 
 
 
@@ -236,18 +252,37 @@ app.post("/urls/:id/delete", (req, res) => {
 
 
 
+// GET route for /u/:id endpoint
+app.get("/u/:id", (req, res) => {
+  // Fetch the long URL from the urlDatabase by providing the corresponding id
+  const longURL = urlDatabase[req.params.id];
+
+  // Check if the short URL exists in the urlDatabase
+  if (longURL) {
+    // If the short URL exists, redirect the user to the corresponding long URL
+    res.redirect(longURL.longURL);
+  } else {
+    // If the short URL does not exist, send a 404 error response with a relevant message
+    res.status(404).send("Shortened URL not");
+  }
+});
+
+
+
 // POST route to update a URL
 app.post("/urls/:id", (req, res) => {
   // Extract the URL ID from the request parameters
   const urlId = req.params.id;
+  console.log("URL ID:", urlId); // Log URL ID to console
   
   // Retrieve the updated long URL from the request body
   const updatedLongURL = req.body.updatedLongURL;
+  console.log("Updated Long URL:", updatedLongURL); // Log updated URL to console
 
   // Check if the URL ID exists in the urlDatabase
   if (urlDatabase[urlId]) {
     // Update the long URL in the urlDatabase with the new value
-    urlDatabase[urlId] = updatedLongURL;
+    urlDatabase[urlId].longURL = updatedLongURL;
     
     // Redirect the client back to the /urls page
     res.redirect("/urls");
@@ -256,6 +291,7 @@ app.post("/urls/:id", (req, res) => {
     res.status(404).send("URL not found");
   }
 });
+
 
 
 
