@@ -37,7 +37,7 @@ describe('Access Control Tests', function() {
 
   it('should return status code 403 for accessing a URL without permission', function() {
     return agent
-      .get('/urls/b2xVn2')
+      .get('/urls/b6UTxQ')
       .then(function(res) {
         expect(res).to.have.status(403);
       });

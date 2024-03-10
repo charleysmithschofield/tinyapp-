@@ -63,31 +63,6 @@ const getUserById = function(userId) {
   return null;
 };
 
-// Check if user is logged in (middleware)
-const checkIfLoggedIn = function (req, res, next) {
-  // Check if user_id cookie is already stored
-  if (req.session.user_id) {
-    // If cookie is found, user is logged in, continue to the next middleware or route handler
-    next();
-  } else {
-    // If cookie is not found, user is not logged in, redirect to the /login page
-    res.redirect('/login');
-  }
-};
-
-// Check if user is not logged in (helper function)
-const checkIfNotLoggedIn = function (req, res, next) {
-  // Check if the user_id cookie is not already stored
-  if (!req.session.user_id) {
-    // If the user is not logged in, continue to the next middleware or route handler
-    next();
-  } else {
-    // If the user is logged in, redirect to the /urls page
-    res.redirect('/urls');
-  }
-};
-
-
 // Filter URLs by userID
 const urlsForUser = function(userID) {
   // Initialize an empty object to store the user's URLs
@@ -110,7 +85,5 @@ module.exports = {
   generateRandomString,
   getUserByEmail,
   getUserById,
-  checkIfLoggedIn,
-  checkIfNotLoggedIn,
   urlsForUser
 };
