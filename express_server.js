@@ -59,20 +59,6 @@ const generateRandomString = function() {
   return randomString;
 };
 
-// Function to generate random user ID
-const generateRandomID = function() {
-  // Variable called randomString to store the shortURL ID
-  let randomString = '';
-  // Variable called characters containing the alphabet in lower and uppercase, as well as, the numbers from 0 to 9
-  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV0123456789';
-  // For loop to iterate the characters
-  for (let i = 0; i < 6; i++) {
-    // add random characters to the randomString. Use .charAt, Math.floor and Math.random to generate random characters
-    randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return randomString;
-};
-
 
 // Function to retireve user object by user ID
 const getUserById = function(userId) {
@@ -237,9 +223,24 @@ app.get('/login', (req, res) => {
   // If the user is not logged in, render the login page
   res.render('login', { user: req.user }); // Assuming user data is available in req.user
 });
+// GET route for /u/:id endpoint
+app.get("/u/:id", (req, res) => {
+  // Fetch the long URL from the urlDatabase by providing the corresponding id
+  const longURL = urlDatabase[req.params.id];
+
+  // Check if the short URL exists in the urlDatabase
+  if (longURL) {
+    // If the short URL exists, redirect the user to the corresponding long URL
+    res.redirect(longURL.longURL);
+  } else {
+    // If the short URL does not exist, send a 404 error response with a relevant message
+    res.status(404).send("Shortened URL not found");
+  }
+});
+
+
 
 // POSTS HERE =======================================================
-
 
 // POST route for the /urls endpoint
 app.post("/urls", (req, res) => {
@@ -296,25 +297,6 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 
-
-
-// GET route for /u/:id endpoint
-app.get("/u/:id", (req, res) => {
-  // Fetch the long URL from the urlDatabase by providing the corresponding id
-  const longURL = urlDatabase[req.params.id];
-
-  // Check if the short URL exists in the urlDatabase
-  if (longURL) {
-    // If the short URL exists, redirect the user to the corresponding long URL
-    res.redirect(longURL.longURL);
-  } else {
-    // If the short URL does not exist, send a 404 error response with a relevant message
-    res.status(404).send("Shortened URL not found");
-  }
-});
-
-
-
 // POST route to update a URL
 app.post("/urls/:id", (req, res) => {
   // Extract the URL ID from the request parameters
@@ -352,7 +334,7 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
 
   // Find user by email
-  const user = helpers.getUserByEmail(email);
+  const user = helpers.getUserByEmail(email, users);
 
   try {
     // Check if user exists and if the password matches
@@ -396,7 +378,7 @@ app.post("/register", (req, res) => {
   }
 
   // check if the email already exists
-  if (helpers.getUserByEmail(email)) {
+  if (helpers.getUserByEmail(email, users)) {
     // If the email already exists, send a 500 Bad Request status code with an error message indicating the email already exists
     return res.status(400).send("Error: Email already exists");
   }
