@@ -1,8 +1,10 @@
 // Import the express module from the library
 const express = require("express");
-
 // Import cookie-parser
 const cookieParser = require("cookie-parser");
+// Import bcrypt
+const bcrypt = require("bcryptjs");
+
 
 // Create an instance of Express
 const app = express();
@@ -356,7 +358,7 @@ app.post("/login", (req, res) => {
   const user = getUserByEmail(email);
 
   // Check if user exists and if the password matches
-  if (user && user.password === password) {
+  if (user && bcrypt.compareSync(password, user.password)) {
     // Set a cookie named 'user_id' with the user's ID
     res.cookie('user_id', user.id);
     // Redirect the user back to the /urls page
@@ -412,6 +414,9 @@ app.post("/register", (req, res) => {
     return res.status(400).send("Error: Email already exists");
   }
 
+  // Hash the password using bcrypt
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   // Continue with registration process
   // Generate a random user object
   const userId = generateRandomString();
@@ -420,7 +425,7 @@ app.post("/register", (req, res) => {
   const newUser = {
     id: userId,
     email: email,
-    password: password
+    password: hashedPassword
   };
   
   // Add the new user to the users object
