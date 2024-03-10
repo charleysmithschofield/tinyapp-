@@ -357,15 +357,21 @@ app.post("/login", (req, res) => {
   // Find user by email
   const user = getUserByEmail(email);
 
-  // Check if user exists and if the password matches
-  if (user && bcrypt.compareSync(password, user.password)) {
-    // Set a cookie named 'user_id' with the user's ID
-    res.cookie('user_id', user.id);
-    // Redirect the user back to the /urls page
-    res.redirect('/urls');
-  } else {
-    // If user does not exist or password is incorrect, send error status code and error message
-    res.status(403).send("Error: Incorrect email or password");
+  try {
+    // Check if user exists and if the password matches
+    if (user && bcrypt.compareSync(password, user.password)) {
+      // Set a cookie named 'user_id' with the user's ID
+      res.cookie('user_id', user.id);
+      // Redirect the user back to the /urls page
+      res.redirect('/urls');
+    } else {
+      // If user does not exist or password is incorrect, send error status code and error message
+      res.status(403).send("Error: Incorrect email or password");
+    }
+  } catch (error) {
+    // Handle errors thrown by bcrypt.compareSync
+    console.error("Error:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 });
 
