@@ -4,6 +4,7 @@ const app = express();
 const PORT = 8080;
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
+const helpers = require('./helpers');
 
 // Sets view engine to ejs
 app.set("view engine", "ejs");
@@ -70,19 +71,6 @@ const generateRandomID = function() {
     randomString += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return randomString;
-};
-
-// Function to get user by email
-const getUserByEmail = function(email) {
-  // For in loop to iterate through the users
-  for (const userId in users) {
-    // Check if the email used matches an email already in the current users
-    if (users[userId].email === email) {
-      return users[userId];
-    }
-  }
-  // If user is not found, return null
-  return null;
 };
 
 
@@ -357,7 +345,6 @@ app.post("/urls/:id", (req, res) => {
 });
 
 
-
 // POST route to /login
 app.post("/login", (req, res) => {
   // Retrieve the email and password from the request body
@@ -365,7 +352,7 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
 
   // Find user by email
-  const user = getUserByEmail(email);
+  const user = helpers.getUserByEmail(email);
 
   try {
     // Check if user exists and if the password matches
@@ -381,7 +368,7 @@ app.post("/login", (req, res) => {
   } catch (error) {
     // Handle errors thrown by bcrypt.compareSync
     console.error("Error:", error.message);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("An unexpected error occurred. Please try again later.");
   }
 });
 
@@ -409,7 +396,7 @@ app.post("/register", (req, res) => {
   }
 
   // check if the email already exists
-  if (getUserByEmail(email)) {
+  if (helpers.getUserByEmail(email)) {
     // If the email already exists, send a 500 Bad Request status code with an error message indicating the email already exists
     return res.status(400).send("Error: Email already exists");
   }
