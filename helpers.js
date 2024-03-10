@@ -63,6 +63,20 @@ const getUserById = function(userId) {
   return null;
 };
 
+// Function to check if the user is logged in
+const requireLogin = function(req, res, next) {
+  // Retrieve the user object based on the user_id session
+  const user = getUserById(req.session.user_id);
+
+  // Check if the user is not logged in
+  if (!user) {
+    // If the user is not logged in, redirect them to the login page
+    return res.redirect("/login");
+  }
+  // If the user is logged in, proceed to the next
+  next();
+};
+
 
 // Filter URLs by userID
 const urlsForUser = function(userID) {
@@ -86,5 +100,6 @@ module.exports = {
   generateRandomString,
   getUserByEmail,
   getUserById,
+  requireLogin,
   urlsForUser
 };

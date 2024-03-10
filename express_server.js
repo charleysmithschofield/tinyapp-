@@ -4,7 +4,7 @@ const app = express();
 const PORT = 8080;
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcryptjs");
-const { urlDatabase, users, getUserByEmail, generateRandomString, getUserById, urlsForUser} = require('./helpers');
+const { urlDatabase, users, getUserByEmail, generateRandomString, getUserById, requireLogin, urlsForUser} = require('./helpers');
 
 // Sets view engine to ejs
 app.set("view engine", "ejs");
@@ -48,18 +48,10 @@ app.get("/hello", (req, res) => {
 
 
 // GET route for /urls endpoint
-app.get("/urls", (req, res) => {
+app.get("/urls", requireLogin, (req, res) => {
   // Retrieve the user object based on the user_id session
   const user = getUserById(req.session.user_id);
 
-  // Check if the user is not logged in
-  if (!user) {
-    // If the user is not logged in, render an error message suggesting to log in or register first
-    return res.status(401).send(`
-    <h1>You must log in or register first to view your shortened URLs.</h1>
-    <p><a href="/login">Log in</a> or <a href="/register">Register</a></>
-  `);
-  }
   // Filter URLs to display only the URLs belonging to the logged-in user
   const userURLs = urlsForUser(user.id);
 
@@ -74,15 +66,10 @@ app.get("/urls", (req, res) => {
 
 
 // GET route for /urls/new
-app.get("/urls/new", (req, res) => {
+app.get("/urls/new", requireLogin, (req, res) => {
   // Retrieve the user object based on the user_id
   const user = getUserById(req.session.user_id);
 
-  // check if the user is not logged in
-  if (!user) {
-    // if user is not logged in redirect the user to the /login endpoint
-    return res.redirect("/login");
-  }
   // Provide the urlDatabase to the urls_index template
   const templateVars = {
     user: user, // Pass the user object to the template
@@ -93,38 +80,29 @@ app.get("/urls/new", (req, res) => {
 });
 
 
-// GET route for the "/urls/:id" endpoint
-app.get("/urls/:id", (req, res) => {
-  // Fetch the short URL from the request parameters
+app.get("/urls/:id", requireLogin, (req, res) => {
   const shortURL = req.params.id;
-
-  // Retrieve the user object based on the user_id
-  const user = getUserById(req.session.user_id);
 
   // Check if the short URL exists in the urlDatabase
   if (urlDatabase[shortURL]) {
-    // Check if the user is logged in
-    if (user) {
-      // Check if the URL belongs to the logged-in user
-      if (urlDatabase[shortURL].userID === user.id) {
-        // Provide the id, longURL, and user_id to the urls_show template
+    // If the URL exists, render the urls_show template with appropriate data
+    const userId = req.session.user_id;
+    if (userId) {
+      if (urlDatabase[shortURL].userID === userId) {
         const templateVars = {
           id: shortURL,
           longURL: urlDatabase[shortURL].longURL,
-          user: user
+          user: getUserById(userId) // You might want to fetch the user object here for rendering purposes
         };
-        // Render the urls_show template
         res.render("urls_show", templateVars);
       } else {
-        // If the URL does not belong to the logged-in user, send a status code of 403
         res.status(403).send("You do not have permission to access this URL.");
       }
     } else {
-      // If the user is not logged in, send a status code of 403
       res.status(403).send("You must be logged in to access this URL.");
     }
   } else {
-    // If the short URL does not exist, send a status code of 404
+    // If the URL does not exist, send a status code of 404
     res.status(404).send("Shortened URL not found");
   }
 });
@@ -180,27 +158,30 @@ app.get("/u/:id", (req, res) => {
 
 // POST route for the /urls endpoint
 app.post("/urls", (req, res) => {
-  // Define userID
-  const userID = req.session.user_id;
-  // Check if the user is logged in
-  const user = getUserById(userID);
+  // Retrieve the user object based on the user_id session
+  const user = getUserById(req.session.user_id);
+
+  // Check if the user is not logged in
   if (!user) {
-    // If the user is not logged in, display an HTML message stating they must be logged in to shorten URLs
-    return res.status(403).send("<h1>You must be logged in to shorten URLs.</h1>");
+    // If the user is not logged in, respond with an HTML message explaining why they cannot shorten URLs
+    return res.status(401).send(`
+      <h1>You must log in to create a new URL.</h1>
+      <p><a href="/login">Log in</a></p>
+    `);
   }
+
   // Retrieve longURL from the request body
   const longURL = req.body.longURL;
 
   // Generate shortURL
   const shortURL = generateRandomString();
 
-  // Adjust the following line to include both longURL and userID in the structure
-  urlDatabase[shortURL] = { longURL, userID };
+  // Store the URL in the database along with the user ID only if the user is logged in
+  urlDatabase[shortURL] = { longURL, userID: req.session.user_id }; // Assuming the user_id is stored in the session
 
-  // Redirect to the new URL's page
+  // Redirect to the /urls page
   res.redirect(`/urls`);
 });
-
 
 
 // POST route to delete a URL
@@ -343,7 +324,6 @@ app.post("/register", (req, res) => {
   // Redirect user to the /urls page
   res.redirect("/urls");
 });
-
 
 
 // Start the server and listen for incoming requests on the specified port
