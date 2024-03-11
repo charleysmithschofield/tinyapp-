@@ -52,7 +52,7 @@ This allows users to share URLs without running out of characters in various soc
 
 ## Log Into Your Account
 
-![Alt text](</screenshorts/Screenshot 2024-03-10 at 4.50.06 PM.png>)
+![Alt text](</screenshots//Screenshot 2024-03-10 at 4.50.06 PM.png>)
 
 ## Access Your 'Tiny' URLs
 
@@ -60,7 +60,7 @@ This allows users to share URLs without running out of characters in various soc
 
 ## Create New 'Tiny' URLs
 
-![Alt text](</screenshots/Screenshot 2024-03-10 at 4.50.21 PM-1.pngScreenshot 2024-03-10 at 4.50.21 PM.png>)
+![Alt text](/screenshots/Screenshot%202024-03-10%20at%204.50.21 PM.png)
 
 ## Edit Your 'Tiny' URLs
 
