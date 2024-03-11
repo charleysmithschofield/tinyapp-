@@ -48,20 +48,20 @@ This allows users to share URLs without running out of characters in various soc
 
 ## Create Your Account
 
-![Alt text](<Screenshot 2024-03-10 at 4.49.17 PM.png>)
+![Alt text](</screenshots/Screenshot 2024-03-10 at 4.49.17 PM.png>)
 
 ## Log Into Your Account
 
-![Alt text](<Screenshot 2024-03-10 at 4.50.06 PM.png>)
+![Alt text](</screenshorts/Screenshot 2024-03-10 at 4.50.06 PM.png>)
 
 ## Access Your 'Tiny' URLs
 
-![Alt text](<Screenshot 2024-03-10 at 4.50.18 PM.png>)
+![Alt text](</screenshots/Screenshot 2024-03-10 at 4.50.18 PM.png>)
 
 ## Create New 'Tiny' URLs
 
-![Alt text](<Screenshot 2024-03-10 at 4.50.21 PM.png>)
+![Alt text](</screenshots/Screenshot 2024-03-10 at 4.50.21 PM-1.pngScreenshot 2024-03-10 at 4.50.21 PM.png>)
 
 ## Edit Your 'Tiny' URLs
 
-![Alt text](<Screenshot 2024-03-10 at 4.55.46 PM.png>)
+![Alt text](</screenshots/Screenshot 2024-03-10 at 4.55.46 PM.png>)
